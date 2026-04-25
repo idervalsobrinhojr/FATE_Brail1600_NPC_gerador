@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerador FATE Brasil 1600</title>
+
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1a1a1a">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #1a1a1a;
+      color: #eee;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-size: 13px;
+    }
+
+    .container {
+      width: 95%;
+      max-width: 420px;
+      text-align: center;
+    }
+
+    select, button {
+      width: 100%;
+      padding: 8px;
+      margin: 6px 0;
+      border-radius: 6px;
+      border: none;
+      font-size: 13px;
+    }
+
+    button {
+      background: #4caf50;
+      color: white;
+      font-weight: bold;
+    }
+
+    .card {
+      background: #2a2a2a;
+      padding: 10px;
+      border-radius: 8px;
+      margin-top: 10px;
+      text-align: left;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h3>Gerador FATE</h3>
+
+  <select id="tipo">
+    <option value="auto">Aleatório</option>
+    <option value="comum">Comum</option>
+    <option value="assistente">assistente</option>
+    <option value="lider">Líder</option>
+    <option value="solo">Solo</option>
+  </select>
+
+  <button onclick="gerarNPC()">Gerar NPC</button>
+
+  <div id="resultado" class="card"></div>
+</div>
+
+<script>
+const origens = [
+"Colono pobre","Soldado colonial","Comerciante português","Missionário",
+"Senhor de engenho","Feitor","Capitão do mato","Traficante",
+"Fugitivo","Guerreiro indígena","Curandeiro","Espírito da mata"
+];
+
+const funcoes = [
+"Brutamontes","Controlador","Líder","Caçador",
+"Manipulador","Emboscador","Fanático","Sobrevivente"
+];
+
+const motivacoes = [
+"Ganância","Fé","Medo","Sobrevivência","Vingança",
+"Dever","Proteção","Ambição","Curiosidade","Ódio"
+];
+
+const tracos = [
+"Cicatriz","Voz marcante","Olhar estranho","Calmo demais",
+"Violento","Religioso","Ligado à natureza","Sempre armado",
+"Cheiro forte","Sussurra","Amuletos","Sem emoção"
+];
+
+function rand(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+function gerarNPC(){
+  let tipo = document.getElementById("tipo").value;
+
+  if(tipo === "auto"){
+    tipo = ["comum","assistente","lider","solo"][Math.floor(Math.random()*4)];
+  }
+
+  let origem = rand(origens);
+  let funcao = rand(funcoes);
+  let motiv = rand(motivacoes);
+  let traco = rand(tracos);
+
+  let ficha = "";
+
+  ficha += "Tipo: " + tipo.toUpperCase() + "\n\n";
+  ficha += "High Concept: " + origem + " " + funcao + "\n";
+  ficha += "Trouble: " + motiv + " extremo\n\n";
+
+  ficha += "Aspectos:\n- " + traco + "\n- Ligado a " + origem + "\n\n";
+
+  if(tipo === "comum"){
+    ficha += "Perícias:\n+2 principal\n+1 duas\n";
+    ficha += "Stress: 2";
+  }
+  else if(tipo === "assistente"){
+    ficha += "Perícias:\n+3 principal\n+2 duas\n+1 duas\n";
+    ficha += "Stress: 3";
+  }
+  else if(tipo === "lider"){
+    ficha += "Perícias:\n+4 principal\n+3 duas\n+2 duas\n+1 duas\n";
+    ficha += "Stress: 3/3";
+  }
+  else {
+    ficha += "Perícias:\n+5 principal\n+4 duas\n+3 duas\n";
+    ficha += "Stress: 4+";
+  }
+
+  ficha += "\n\nStunt:\nBônus baseado na função (" + funcao + ")";
+
+  document.getElementById("resultado").innerText = ficha;
+}
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js');
+}
+</script>
+
+</body>
+</html>
